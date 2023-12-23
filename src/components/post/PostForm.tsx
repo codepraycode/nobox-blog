@@ -1,5 +1,6 @@
 'use client';
 import { IPost, IUser } from "@/types";
+import { sendPost } from "@/utils/post";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,12 +24,28 @@ const PostForm = ({edit}:{edit?:boolean}) => {
             userId: initialData?.userId || '',
         },
         onSubmit: values => {
-            console.log(JSON.stringify(values, null, 2));
+            
 
-            // TODO: Implement submit form
-            alert("Add user not yet implemented");
+            const data:IPost = {
+                title: values.title,
+                content: values.content,
+                userId: values.userId
+            }
 
-            formik.resetForm()
+            if (postError) setPostError(null);
+
+            setSaving(true);
+
+            sendPost(data)
+            .then((res)=>{
+                router.push(`/post/${res.id}`);
+                // formik.resetForm()
+            })
+            .catch((err:any)=>{
+                console.error(err);
+                setPostError(()=>"Could not save post")
+                setSaving(false)
+            })
         },
     });
 
