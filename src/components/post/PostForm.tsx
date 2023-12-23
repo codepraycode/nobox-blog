@@ -1,16 +1,25 @@
 'use client';
 import { IPost, IUser } from "@/types";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const PostForm = ({edit}:{edit?:boolean}) => {
 
     // TODO: load post data if edit is true
     let initialData: IPost | undefined;
+
+    const router = useRouter();
+
+    const [saving, setSaving] = useState(false);
+
+
+    const [postError, setPostError] = useState<string | null>(null);
     
     const formik = useFormik({
         initialValues: {
             title: initialData?.title || '',
-            content: initialData?.body || '',
+            content: initialData?.content || '',
             userId: initialData?.userId || '',
         },
         onSubmit: values => {
@@ -29,7 +38,7 @@ const PostForm = ({edit}:{edit?:boolean}) => {
 
     const usersOptions = users.map(user=>(
         <option key={user.id} value={user.id}>
-            {user.name}
+            {user.username}
         </option>
     ))
 
@@ -40,6 +49,11 @@ const PostForm = ({edit}:{edit?:boolean}) => {
                 { edit ? "Edit Post":
                 "Add a New Post"}
             </h2>
+
+            <span>{postError}</span>
+            <span>{saving && "Saving..."}</span>
+
+            <br/>
 
             <form onSubmit={formik.handleSubmit}>
                 <label htmlFor="postTitle">Post Title:</label>
