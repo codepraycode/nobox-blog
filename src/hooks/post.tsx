@@ -1,5 +1,6 @@
 import { usePostContext } from "@/context/PostContext"
 import { IPost, IPostContext } from "@/types"
+import { fetchPost } from "@/utils/post";
 import { useEffect, useState } from "react";
 
 
@@ -15,7 +16,16 @@ export const usePost = (postId:string) => {
 
     useEffect(()=>{
         (()=>{
-            
+            fetchPost(postId)
+            .then((res)=>{
+                setPost(()=>res);
+            })
+            .catch((err)=>{
+                setError(()=>err);
+            })
+            .finally(()=>{
+                setLoading(false);
+            })
         })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
