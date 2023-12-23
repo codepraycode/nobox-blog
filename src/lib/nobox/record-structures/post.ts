@@ -29,7 +29,7 @@ export const PostStructure: Space<Post> = {
         },
         reaction: {
             description: "Post reaction",
-            required: false,
+            required: true,
             type: String,
             defaultValue: JSON.stringify({
                 thumbsUp: 0,
